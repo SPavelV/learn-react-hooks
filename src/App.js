@@ -1,8 +1,8 @@
 import React from "react";
-import Switcher from "./components/Switcher";
+import HookSwitcher from "./components/HookSwitcher";
 
 function App() {
-  return <Switcher />;
+  return <HookSwitcher />;
 }
 
 export default App;
