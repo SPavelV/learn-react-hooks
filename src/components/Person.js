@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 
 export default class Person extends Component {
   state = {
@@ -20,8 +20,22 @@ export default class Person extends Component {
 }
 
 const PersonHook = () => {
-  const [firstName, setFirstName] = useState("Bob");
-  const [lastName, setLastName] = useState("Smith")
+  const [person, setPerson] = useState({
+    firstName: "Bob",
+    lastName: "Smith",
+  });
 
-  setFirstName({ firstname: "Mike" });
+  setPerson((person) => {
+    return {
+      firstName: "Mike",
+      lastName: person.lastName,
+    };
+  });
+
+  setPerson((person) => {
+    return {
+      ...person,
+      firstname: "Jonh",
+    };
+  });
 };
