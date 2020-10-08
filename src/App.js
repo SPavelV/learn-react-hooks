@@ -1,14 +1,11 @@
 import React, { useContext } from "react";
 import HookSwitcher from "./components/HookSwitcher";
+import { Counter } from "./components/Counter";
 
 const MyContext = React.createContext();
 
 function App() {
-  return (
-    <MyContext.Provider value="Hello World 123">
-      <Child />
-    </MyContext.Provider>
-  );
+  return <Counter />;
 }
 
 const Child = () => {
