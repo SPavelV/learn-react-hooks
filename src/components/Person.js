@@ -20,10 +20,8 @@ export default class Person extends Component {
 }
 
 const PersonHook = () => {
-  const [person, setPerson] = useState({
-    firstName: "Bob",
-    lastName: "Smith",
-  });
+  const [firstName, setFirstName] = useState("Bob");
+  const [lastName, setLastName] = useState("Smith")
 
-  setPerson({ firstname: "Mike" }); // в новом состоянии будет только одно свойстов firstName: "Mike"
+  setFirstName({ firstname: "Mike" });
 };
