@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import HookSwitcher from "./components/HookSwitcher";
 
 const MyContext = React.createContext();
@@ -12,13 +12,8 @@ function App() {
 }
 
 const Child = () => {
-  return (
-    <MyContext.Consumer>
-      {(value) => {
-        return <p> {value} </p>;
-      }}
-    </MyContext.Consumer>
-  );
+  const value = useContext(MyContext);
+  return <p>{value}</p>;
 };
 
 export default App;
