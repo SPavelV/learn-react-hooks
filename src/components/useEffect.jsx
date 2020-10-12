@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect, useCallback, Component } from "react";
 
 export const Counter = () => {
   const [value, setValue] = useState(1);
@@ -61,26 +61,36 @@ export const Notification = () => {
   return <div>{visible && <p>Hello</p>}</div>;
 };
 
-const usePlanetInfo = (id) => {
-  const [name, setName] = useState(null);
+const getPlanet = (id) => {
+  return fetch(`https://swapi.dev/api/planets/${id}`)
+    .then((res) => res.json())
+    .then((data) => data);
+};
+
+const useRequest = (request) => {
+  const [dataState, setDataState] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`https://swapi.dev/api/planets/${id}`)
-      .then((res) => res.json())
-      .then((data) => !cancelled && setName(data.name));
-    return () => (cancelled = true);
-  }, [id]);
+    request()
+      .then(data => !cancelled && setDataState(data));
+    return () => cancelled = true;
+  }, [request]);
 
-  return name;
+  return dataState;
+};
+
+const usePlanetInfo = (id) => {
+  const request = useCallback(() => getPlanet(id), [id])
+  return useRequest(request);
 };
 
 const PlanetInfo = ({ id }) => {
-  const name = usePlanetInfo(id);
+  const data = usePlanetInfo(id);
 
   return (
     <div>
-      {id} - {name}
+      {id} - {data && data.name}
     </div>
   );
 };
