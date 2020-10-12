@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Component } from "react";
 
 export const Counter = () => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(1);
   const [visible, setVisible] = useState(true);
 
   if (visible) {
@@ -11,7 +11,7 @@ export const Counter = () => {
 
         <button onClick={() => setVisible(false)}>hide</button>
 
-        <Notification />
+        <PlanetInfo id={value} />
       </div>
     );
   } else {
@@ -59,4 +59,22 @@ export const Notification = () => {
   }, []);
 
   return <div>{visible && <p>Hello</p>}</div>;
+};
+
+const PlanetInfo = ({ id }) => {
+  const [name, setName] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`https://swapi.dev/api/planets/${id}`)
+      .then((res) => res.json())
+      .then((data) => !cancelled && setName(data.name));
+    return () => (cancelled = true);
+  }, [id]);
+
+  return (
+    <div>
+      {id} - {name}
+    </div>
+  );
 };
