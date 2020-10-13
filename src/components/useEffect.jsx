@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, Component } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  Component,
+} from "react";
 
 export const Counter = () => {
   const [value, setValue] = useState(1);
@@ -68,29 +74,60 @@ const getPlanet = (id) => {
 };
 
 const useRequest = (request) => {
-  const [dataState, setDataState] = useState(null);
+  const initialState = useMemo(() => ({
+    data: null,
+    loading: true,
+    error: null,
+  }), []);
+
+  const [dataState, setDataState] = useState(initialState);
 
   useEffect(() => {
+    setDataState(initialState);
     let cancelled = false;
     request()
-      .then(data => !cancelled && setDataState(data));
-    return () => cancelled = true;
-  }, [request]);
+      .then(
+        (data) =>
+          !cancelled &&
+          setDataState({
+            data,
+            loading: false,
+            error: null,
+          })
+      )
+      .catch(
+        (error) =>
+          !cancelled &&
+          setDataState({
+            data: null,
+            loading: false,
+            error,
+          })
+      );
+    return () => (cancelled = true);
+  }, [request, initialState]);
 
   return dataState;
 };
 
 const usePlanetInfo = (id) => {
-  const request = useCallback(() => getPlanet(id), [id])
+  const request = useCallback(() => getPlanet(id), [id]);
   return useRequest(request);
 };
 
 const PlanetInfo = ({ id }) => {
-  const data = usePlanetInfo(id);
+  const { data, loading, error } = usePlanetInfo(id);
+  if (error) {
+    return <div>Something is wrong</div>;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-      {id} - {data && data.name}
+      {id} - {data.name}
     </div>
   );
 };
